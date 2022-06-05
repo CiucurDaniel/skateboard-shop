@@ -7,6 +7,8 @@ COPY go.sum ./
 
 RUN go mod download
 
+COPY static ./static
+COPY templates ./templates
 COPY *.go ./
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o frontend-app .
