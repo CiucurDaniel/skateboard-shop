@@ -35,6 +35,6 @@ docker run --name dev-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=my-password -d m
 
 Db has to be created as well for now
 
-```go
+```
 CREATE DATABASE catalogdb;
 ```
