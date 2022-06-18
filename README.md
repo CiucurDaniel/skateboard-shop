@@ -13,3 +13,5 @@ minikube start --cpus 4 --memory 6144
 * Catalog - contains products with stock info
 * ShoppingCart - contains items added in cart and processes payments
 * Tracking - track orders
+
+![Microservices Diagram](documentation/SkateboardShop.jpg)
