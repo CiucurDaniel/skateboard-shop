@@ -10,7 +10,7 @@ type Config struct {
 	ServerPort int    `mapstructure:"port"`
 }
 
-func LoadAppConfig() *Config {
+func LoadAppConfig() (*Config, error) {
 
 	var c *Config
 
@@ -21,15 +21,13 @@ func LoadAppConfig() *Config {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Println("Here")
-		log.Fatal(err)
+		return nil, err
 	}
 
 	err = viper.Unmarshal(&c)
 	if err != nil {
-		log.Println("There")
-		log.Fatal(err)
+		return nil, err
 	}
 
-	return c
+	return c, nil
 }

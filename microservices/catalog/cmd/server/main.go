@@ -17,7 +17,13 @@ func main() {
 	logger := config.NewJsonLogger()
 
 	// Load app configuration
-	appConfig := config.LoadAppConfig()
+	appConfig, err := config.LoadAppConfig()
+	if err != nil {
+		logger.WithFields(logrus.Fields{
+			"microservice": "Catalog",
+			"author":       "Ciucur Daniel",
+		}).Fatal(err)
+	}
 
 	// Database connect
 	database.Connect(appConfig.DbConnStr)
