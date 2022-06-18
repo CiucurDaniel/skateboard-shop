@@ -1,0 +1,90 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: skateshop
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume 
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  namespace: skateshop
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-mysql # DNS name
+  namespace: skateshop
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: catalog-mysql
+  clusterIP: None # DNS is used, so clusterIP is not needed
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-mysql
+  namespace: skateshop
+spec:
+  selector:
+    matchLabels:
+      app: catalog-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: catalog-mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: catalog-mysql
+        resources:
+          requests:
+            cpu: 200m
+            memory: 128Mi
+          limits:
+            cpu: 300m
+            memory: 512Mi
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          value: my-password
+        - name: MYSQL_DATABASE
+          value: catalogdb
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
