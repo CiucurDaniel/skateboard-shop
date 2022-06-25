@@ -6,10 +6,10 @@ import (
 	"time"
 )
 
-var SECRET_KEY []byte // this will be loaded from env later on
+var SecretKey []byte // this will be loaded from env later on
 
 func init() {
-	SECRET_KEY = []byte("mysecretkey")
+	SecretKey = []byte("mysecretkey")
 }
 
 // Generate JWT
@@ -24,7 +24,7 @@ func GetJwtForUserId(userId string) (string, error) {
 	claims["exp"] = time.Now().Add(time.Hour * 4).Unix()
 	claims["uid"] = userId
 
-	tokenString, err := token.SignedString(SECRET_KEY)
+	tokenString, err := token.SignedString(SecretKey)
 	if err != nil {
 		log.Println("Error generating JWT token")
 	}
