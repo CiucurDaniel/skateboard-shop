@@ -1,34 +1,29 @@
 package main
 
 import (
+	"auth/applogger"
 	"auth/jwt"
-	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"time"
 )
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-
-	token, err := jwt.GetJwtForUserId("1")
-	if err != nil {
-		fmt.Println("Failed getting JWT token")
-	}
-	fmt.Println(fmt.Sprintf("Got token: %v", token))
-	fmt.Fprintf(w, token)
-}
-
-func checkAuthHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Valid")
-}
-
 func main() {
-	fmt.Printf("Auth microservice")
+
+	logger := applogger.NewAppLogger()
+
+	jwtGenerator := jwt.NewJwtGenerator([]byte("mysecretkey"))
+
+	authController := AuthController{
+		jwtGenerator: jwtGenerator,
+		logger:       logger,
+	}
 
 	router := mux.NewRouter()
-	router.HandleFunc("/login", loginHandler).Methods(http.MethodGet)
-	router.HandleFunc("/check", checkAuthHandler).Methods(http.MethodGet)
+	router.Use(authController.requestLogger)
+	router.HandleFunc("/login", authController.loginHandler)
+	router.HandleFunc("/register", authController.registerHandler)
 
 	server := http.Server{
 		Addr:         ":8070",

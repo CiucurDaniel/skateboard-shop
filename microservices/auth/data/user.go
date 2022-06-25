@@ -25,3 +25,7 @@ var UserList = []user{
 		role:     1,
 	},
 }
+
+func AddUserToDb(u user) error {
+	return nil
+}

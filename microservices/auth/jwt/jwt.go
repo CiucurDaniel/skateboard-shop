@@ -6,15 +6,17 @@ import (
 	"time"
 )
 
-var SecretKey []byte // this will be loaded from env later on
+type TokenUtil struct {
+	secretKey []byte
+}
 
-func init() {
-	SecretKey = []byte("mysecretkey")
+func NewJwtGenerator(secretKey []byte) *TokenUtil {
+	return &TokenUtil{secretKey: secretKey}
 }
 
 // Generate JWT
 
-func GetJwtForUserId(userId string) (string, error) {
+func (j *TokenUtil) GetJwtForUserId(userId string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
@@ -24,7 +26,7 @@ func GetJwtForUserId(userId string) (string, error) {
 	claims["exp"] = time.Now().Add(time.Hour * 4).Unix()
 	claims["uid"] = userId
 
-	tokenString, err := token.SignedString(SecretKey)
+	tokenString, err := token.SignedString(j.secretKey)
 	if err != nil {
 		log.Println("Error generating JWT token")
 	}
