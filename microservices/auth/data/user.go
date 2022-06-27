@@ -3,11 +3,11 @@ package data
 import "errors"
 
 type User struct {
-	id       string
-	email    string
-	password string
-	fullname string
-	role     int
+	Id       string
+	Email    string
+	Password string
+	Fullname string
+	Role     int
 }
 
 var UserAlreadyExists = errors.New("User already exists in the database")
@@ -15,18 +15,18 @@ var UserAlreadyExists = errors.New("User already exists in the database")
 // for the moment use no DB, only local storage
 var UserList = []User{
 	{
-		id:       "1",
-		email:    "ciucur.daniel@email.com",
-		password: "abcde",
-		fullname: "Ciucur Daniel",
-		role:     1,
+		Id:       "1",
+		Email:    "ciucur.daniel@email.com",
+		Password: "abcde",
+		Fullname: "Ciucur Daniel",
+		Role:     1,
 	},
 	{
-		id:       "2",
-		email:    "mike.jon@email.com",
-		password: "mike123",
-		fullname: "Mike Jon",
-		role:     1,
+		Id:       "2",
+		Email:    "mike.jon@email.com",
+		Password: "mike123",
+		Fullname: "Mike Jon",
+		Role:     1,
 	},
 }
 
@@ -40,7 +40,7 @@ func AddUserToDb(u User) error {
 
 func checkUserExist(u User) bool {
 	for i := 0; i < len(UserList); i++ {
-		if u.email == UserList[i].email {
+		if u.Email == UserList[i].Email {
 			return true
 		}
 	}

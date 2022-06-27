@@ -2,7 +2,10 @@ package main
 
 import (
 	"auth/applogger"
+	"auth/data"
 	"auth/jwt"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -13,6 +16,8 @@ type AuthController struct {
 	jwtGenerator *jwt.TokenUtil
 	logger       *applogger.MyLogger
 }
+
+var InvalidUserJson = errors.New("Invalid User in Json")
 
 func (c AuthController) requestLogger(router http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -47,5 +52,19 @@ func (c AuthController) loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c AuthController) registerHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "All good, you are registered")
+	var user data.User
+
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, InvalidUserJson.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = data.AddUserToDb(user)
+	if err != nil {
+		http.Error(w, data.UserAlreadyExists.Error(), http.StatusBadRequest)
+		return
+	}
+
+	fmt.Fprintf(w, "User created %+v", user)
 }
