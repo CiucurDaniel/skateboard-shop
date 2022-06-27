@@ -1,0 +1,17 @@
+### Expect 400
+
+POST http://localhost:8070/register
+
+
+### Expect it will respond 200
+
+POST http://localhost:8070/register
+Content-Type: application/json
+
+{
+  "id": "3",
+  "email": "test@test.com",
+  "password": "mypass1234",
+  "fullname": "Test MTest",
+  "role": 1
+}
