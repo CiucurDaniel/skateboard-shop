@@ -1,0 +1,22 @@
+### Expect 200
+
+GET http://localhost:3030/product
+
+
+### Expect it will respond 200
+
+POST http://localhost:3030/product
+Content-Type: application/json
+
+{
+  "name": "skate 1",
+  "price": 14,
+  "quantity": 4,
+  "image_url": "/data/images/picture1.jpeg",
+  "description": "A nice skateboard"
+}
+
+### Expect 200
+
+GET http://localhost:3030/product/1
+
