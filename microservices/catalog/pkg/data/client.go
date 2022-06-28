@@ -1,8 +1,6 @@
-
-package database
+package data
 
 import (
-	"catalog/pkg/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -18,10 +16,10 @@ func Connect(connectionString string) {
 		panic("cannot connect to the DB")
 	}
 
-	log.Println("successfully connected to the database")
+	log.Println("successfully connected to the data")
 }
 
 func Migrate() {
-	Instance.AutoMigrate(&model.Product{})
-	log.Println("database migration for users completed")
+	Instance.AutoMigrate(&Product{})
+	log.Println("data migration for users completed")
 }
