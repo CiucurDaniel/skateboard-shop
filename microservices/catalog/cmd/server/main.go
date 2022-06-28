@@ -6,7 +6,7 @@ import (
 	"catalog/pkg/handlers"
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/sirupsen/logrus"
+	"log"
 	"net/http"
 	"time"
 )
@@ -19,10 +19,7 @@ func main() {
 	// Load app configuration
 	appConfig, err := config.LoadAppConfig()
 	if err != nil {
-		logger.WithFields(logrus.Fields{
-			"microservice": "Catalog",
-			"author":       "Ciucur Daniel",
-		}).Fatal(err)
+		log.Fatal(err)
 	}
 
 	// Database connect
@@ -42,10 +39,8 @@ func main() {
 		IdleTimeout:  120 * time.Second,
 	}
 
-	logger.WithFields(logrus.Fields{
-		"microservice": "Catalog",
-		"author":       "Ciucur Daniel",
-	}).Info(fmt.Sprintf("Server configured starting on port %v", appConfig.ServerPort))
+	logger.LogWithLevel(config.INFO, fmt.Sprintf("Server configured on port %v", appConfig.ServerPort))
+	logger.LogWithLevel(config.INFO, fmt.Sprintf("Database configured on conn string %v", appConfig.DbConnStr))
 
-	logger.Fatal(server.ListenAndServe())
+	log.Fatal(server.ListenAndServe())
 }

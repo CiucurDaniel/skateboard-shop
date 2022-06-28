@@ -6,7 +6,19 @@ import (
 	"time"
 )
 
-func NewJsonLogger() *logrus.Logger {
+type AppLogger struct {
+	logger *logrus.Logger
+}
+
+type LogLevel int
+
+const (
+	DEBUG LogLevel = iota
+	INFO
+	ERROR
+)
+
+func NewJsonLogger() *AppLogger {
 
 	logger := logrus.New()
 	logger.SetOutput(os.Stdout)
@@ -20,5 +32,19 @@ func NewJsonLogger() *logrus.Logger {
 	}
 	logger.WithFields(logrus.Fields{"microservice": "Catalog", "author": "Ciucur Daniel"}) // NOT WORKING
 
-	return logger
+	return &AppLogger{logger: logger}
+
+}
+
+func (l AppLogger) LogWithLevel(level LogLevel, message string) {
+	commonFields := logrus.Fields{"microservice": "Catalog", "author": "Ciucur Daniel"}
+
+	switch level {
+	case DEBUG:
+		l.logger.WithFields(commonFields).Debug(message)
+	case ERROR:
+		l.logger.WithFields(commonFields).Error(message)
+	case INFO:
+		l.logger.WithFields(commonFields).Info(message)
+	}
 }

@@ -1,16 +1,20 @@
 package handlers
 
 import (
+	"catalog/pkg/config"
 	"catalog/pkg/database"
 	"catalog/pkg/model"
 	"encoding/json"
+	"gorm.io/gorm"
 	"net/http"
 )
 
-type CatalogHandler struct {
-
+type CatalogController struct {
+	db     *gorm.DB
+	logger *config.AppLogger
 }
 
+// TODO: Implement middleware for logging
 
 func getProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
