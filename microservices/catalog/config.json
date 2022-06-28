@@ -1,4 +1,4 @@
 {
-  "connection_string": "root:my-password@tcp(127.0.0.1:3306)/catalogdb",
+  "connection_string": "root:my-password@tcp(127.0.0.1:3306)/catalogdb?parseTime=true",
   "port": 3030
 }
