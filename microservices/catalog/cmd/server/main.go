@@ -6,7 +6,6 @@ import (
 	"catalog/pkg/handlers"
 	"fmt"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 	"time"
 )
@@ -19,7 +18,7 @@ func main() {
 	// Load app configuration
 	appConfig, err := config.LoadAppConfig()
 	if err != nil {
-		log.Fatal(err)
+		logger.LogWithLevel(config.FATAL, err.Error())
 	}
 
 	// Database connect
@@ -42,5 +41,5 @@ func main() {
 	logger.LogWithLevel(config.INFO, fmt.Sprintf("Server configured on port %v", appConfig.ServerPort))
 	logger.LogWithLevel(config.INFO, fmt.Sprintf("Database configured on conn string %v", appConfig.DbConnStr))
 
-	log.Fatal(server.ListenAndServe())
+	logger.LogWithLevel(config.FATAL, server.ListenAndServe().Error())
 }

@@ -14,6 +14,7 @@ type LogLevel int
 
 const (
 	DEBUG LogLevel = iota
+	FATAL
 	INFO
 	ERROR
 )
@@ -46,5 +47,7 @@ func (l AppLogger) LogWithLevel(level LogLevel, message string) {
 		l.logger.WithFields(commonFields).Error(message)
 	case INFO:
 		l.logger.WithFields(commonFields).Info(message)
+	case FATAL:
+		l.logger.WithFields(commonFields).Fatal(message)
 	}
 }
