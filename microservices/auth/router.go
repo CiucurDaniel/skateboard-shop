@@ -45,7 +45,7 @@ func (c AuthController) loginHandler(w http.ResponseWriter, r *http.Request) {
 
 	token, err := c.jwtGenerator.GetJwtForUserId("1")
 	if err != nil {
-		fmt.Println("Failed getting JWT token")
+		c.logger.LogError("Failed getting JWT token", err, "loginHandler")
 	}
 	fmt.Println(fmt.Sprintf("Got token: %v", token))
 	fmt.Fprintf(w, token)

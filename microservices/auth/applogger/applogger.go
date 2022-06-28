@@ -39,3 +39,13 @@ func (l MyLogger) LogHttpRequest(_ http.ResponseWriter, r *http.Request, duratio
 			"host":     r.Host,
 		}).Info("Request executed")
 }
+
+func (l MyLogger) LogError(message string, err error, methodName string) {
+	l.loggerInstance.WithFields(
+		logrus.Fields{
+			"microservice": "Auth",
+			"author":       "Ciucur Daniel",
+			"method":       methodName,
+			"go error":     err,
+		}).Error(message)
+}

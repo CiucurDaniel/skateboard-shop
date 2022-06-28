@@ -29,6 +29,7 @@ func (j *TokenUtil) GetJwtForUserId(userId string) (string, error) {
 	tokenString, err := token.SignedString(j.secretKey)
 	if err != nil {
 		log.Println("Error generating JWT token")
+		return "", err
 	}
 
 	return tokenString, nil
