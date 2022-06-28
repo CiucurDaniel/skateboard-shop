@@ -10,9 +10,9 @@ type User struct {
 	Role     int
 }
 
-var UserAlreadyExists = errors.New("User already exists in the database")
+var UserAlreadyExists = errors.New("user already exists in the database")
 
-// for the moment use no DB, only local storage
+// UserList for the moment use no DB, only local storage
 var UserList = []User{
 	{
 		Id:       "1",
