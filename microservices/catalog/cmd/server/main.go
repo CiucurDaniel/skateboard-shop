@@ -2,7 +2,7 @@ package main
 
 import (
 	"catalog/pkg/config"
-	"catalog/pkg/database"
+	"catalog/pkg/data"
 	"catalog/pkg/handlers"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -22,12 +22,19 @@ func main() {
 	}
 
 	// Database connect
-	database.Connect(appConfig.DbConnStr)
-	database.Migrate()
+	data.Connect(appConfig.DbConnStr)
+	data.Migrate()
+
+	controller := handlers.CatalogController{
+		Db:     data.Instance,
+		Logger: logger,
+	}
 
 	// Set up the router
 	router := mux.NewRouter()
-	handlers.InitializeRouter(router)
+	router.HandleFunc("/product", controller.GetProducts).Methods(http.MethodGet)
+	router.HandleFunc("/product", controller.AddProduct).Methods(http.MethodPost)
+	router.HandleFunc("/product/{id}", controller.GetProductsById).Methods(http.MethodGet)
 
 	servAddr := fmt.Sprintf(":%v", appConfig.ServerPort)
 	server := http.Server{
