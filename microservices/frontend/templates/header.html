@@ -13,16 +13,53 @@
     <!-- Maybe add Bootstrap -->
 
     <!-- add favicon -->
+    <style>
+        .custom-nav-bar {
+            display: flex;
+
+            justify-content: space-evenly; /* make space even between elements of the flex-box */
+
+            background-color: greenyellow;
+
+            padding: 1rem;
+
+        }
+
+        li {
+            list-style-type: none; /* I do not want the bullets to be shown */
+            background-color: blue;
+            padding: 1rem;
+            border-radius: 10%;
+        }
+
+        li:hover {
+            background-color: blueviolet;
+        }
+
+        .center-image {
+            position: relative;
+            display: block;
+            left: 50%; /* moves left side of image/element to center of parent element */
+            transform: translate(-50%); /* centers image/element on "left: 50%" position */
+        }
+
+        .style-image {
+            padding: 3rem;
+            margin: 3rem;
+            border: 10px solid green;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <p> Home </p>
-        <p> Login </p>
-        <p> Register </p>
-    </header>
-
-
+<header>
+    <ul class="custom-nav-bar">
+        <li>Home</li>
+        <li>Login</li>
+        <li>Register</li>
+    </ul>
+</header>
 
 
 {{ end }}
