@@ -31,6 +31,11 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", svc.homeHandler).Methods(http.MethodGet, http.MethodHead)
 
+	//fileServer := http.FileServer(http.Dir("./static"))
+	//r.Handle("/static/", http.StripPrefix("/static/", fileServer))
+
+	r.PathPrefix("/static/").Handler( http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+
 	servAddr := fmt.Sprintf(":%v", port)
 	server := http.Server{
 		Addr:         servAddr,

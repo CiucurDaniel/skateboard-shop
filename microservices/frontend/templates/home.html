@@ -3,21 +3,27 @@
 {{ template "header" . }}
 
 
-<div class="container">
-    <h2>Pick your new skateboard from our new collection</h2>
+<div class="container mt-4">
+    <div class="m-4">
+        <h2>Pick your new skateboard from our new collection</h2>
+    </div>
 
-    <ul>
-        <li>Skate 1</li>
-        <li>Skate 2</li>
-        <li>Skate 3</li>
-        <li>Skate 4</li>
-    </ul>
 
-    {{ range .}}
-    <h2>{{.Name}}</h2>
-    <p> {{.Price}} </p>
-    <p> {{.ImageUrl}} </p>
-    {{ end }}
+
+    <div class="row">
+        {{ range .}}
+        <div class="col-md-4">
+            <div class="card m-4" style="width: 18rem;">
+                <img src="/static/{{ .ImageUrl }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{.Name}}</h5>
+                    <p class="card-text">{{.Price}} RON</p>
+                    <a href="#" class="btn btn-primary">Add to cart</a>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
 
 </div>
 
