@@ -12,6 +12,12 @@
     <li>Skate 4</li>
 </ul>
 
+{{ range .}}
+    <h2>{{.Name}}</h2>
+    <p> {{.Price}} </p>
+    <p> {{.ImageUrl}} </p>
+{{ end }}
+
 {{ template "footer" . }}
 
 {{ end }}
