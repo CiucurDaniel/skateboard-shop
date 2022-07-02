@@ -30,6 +30,48 @@ func (f *frontendServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (f *frontendServer) getCartHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Cart handler reached")
+
+	// TODO: IMPLEMENT this which will fetch items from shopping cart for given user
+	/*cartProducts, err := getCartProductsForUser("user id")
+	if err != nil {
+		fmt.Println(err)
+		// todo: display proper page
+	}*/
+
+	err := templates.ExecuteTemplate(w, "cart", nil)
+	if err != nil {
+		fmt.Println("Error rendering page")
+		// todo: implement a renderHttpErrorPage
+	}
+}
+
+func (f *frontendServer) loginHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Signin handler reached")
+
+	err := templates.ExecuteTemplate(w, "login", nil)
+	if err != nil {
+		fmt.Println("Error rendering page")
+		// todo: implement a renderHttpErrorPage
+	}
+}
+
+func (f *frontendServer) postLoginHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Signin post handler reached")
+
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println("Error parsing form")
+	}
+	fmt.Println("email:", r.Form["email"])
+	fmt.Println("password:", r.Form["password"])
+
+	// redirect the user to the Home Page after he logged in
+	http.RedirectHandler("/", 200)
+	// TODO: DOES NOW WORK, IT WILL REDIRECT HOME, BUT NO PRODUCTS WILL BE LOADED
+}
+
 func (f frontendServer) productDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Product details handler reached")
 

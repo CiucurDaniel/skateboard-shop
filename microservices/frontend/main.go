@@ -31,11 +31,14 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", svc.homeHandler).Methods(http.MethodGet, http.MethodHead)
 	r.HandleFunc("/product/{id}", svc.productDetailsHandler).Methods(http.MethodGet)
+	r.HandleFunc("/login", svc.loginHandler).Methods(http.MethodGet)
+	r.HandleFunc("/login", svc.postLoginHandler).Methods(http.MethodPost)
+	r.HandleFunc("/cart", svc.getCartHandler).Methods(http.MethodGet)
 
 	//fileServer := http.FileServer(http.Dir("./static"))
 	//r.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
-	r.PathPrefix("/static/").Handler( http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	servAddr := fmt.Sprintf(":%v", port)
 	server := http.Server{
