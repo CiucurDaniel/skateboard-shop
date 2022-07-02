@@ -23,3 +23,11 @@ http://localhost:5601
 ```
 
 Create the index and you are good to go.
+
+## Frontend
+
+Minikube makes it a bit tricky to expose your app so for now just:
+
+```
+k port-forward frontend-689b64c8ff-2pz9v 9001:9000 -n skateshop
+```
