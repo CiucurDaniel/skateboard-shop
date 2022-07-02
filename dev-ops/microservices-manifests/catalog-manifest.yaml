@@ -1,0 +1,56 @@
+# NOW BEGIN WITH APPLICATION PHASE 
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog
+  namespace: skateshop
+spec:
+  selector:
+    matchLabels:
+      app: catalog
+  template:
+    metadata:
+      labels:
+        app: catalog
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: skateshop-catalog
+          image: ciucurdaniel/skateshop-catalog-microservice:latest
+          ports:
+          - containerPort: 3030
+          # readinessProbe:
+          #   initialDelaySeconds: 5
+          #   httpGet:
+          #     path: "/health"
+          #     port: 8080
+          # livenessProbe:
+          #   initialDelaySeconds: 5
+          #   httpGet:
+          #     path: "/health"
+          #     port: 8080
+          env:
+          - name: PORT
+            value: "3030"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog
+  namespace: skateshop
+  labels:
+    app: skateshop-catalog
+spec:
+  selector:
+    app: catalog
+  ports:
+    - port: 3030
