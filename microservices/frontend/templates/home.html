@@ -9,7 +9,6 @@
     </div>
 
 
-
     <div class="row">
         {{ range .}}
         <div class="col-md-4">
@@ -19,6 +18,7 @@
                     <h5 class="card-title">{{.Name}}</h5>
                     <p class="card-text">{{.Price}} RON</p>
                     <a href="#" class="btn btn-primary">Add to cart</a>
+                    <a href="/product/{{.ID}}" class="btn btn-outline-info">View</a>
                 </div>
             </div>
         </div>

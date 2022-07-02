@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -23,6 +24,25 @@ func (f *frontendServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(products[1])
 
 	err = templates.ExecuteTemplate(w, "home", products)
+	if err != nil {
+		fmt.Println("Error rendering page")
+		// todo: implement a renderHttpErrorPage
+	}
+}
+
+func (f frontendServer) productDetailsHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Product details handler reached")
+
+	var id = mux.Vars(r)["id"]
+
+	product, err := getProductById(id)
+	if err != nil {
+		fmt.Println(err)
+		// todo: assign empty array of skateboard and sed it to frontend
+	}
+	fmt.Println(product)
+
+	err = templates.ExecuteTemplate(w, "product", product)
 	if err != nil {
 		fmt.Println("Error rendering page")
 		// todo: implement a renderHttpErrorPage
@@ -63,5 +83,42 @@ func getAllProducts(endpoint string) ([]Product, error) {
 	fmt.Printf("Response status : %s \n", resp.Status)
 
 	return products, nil
+
+}
+
+func getProductById(id string) (Product, error) {
+	// TODO: Replace url: with Kubernetes service name when deploying in K8s env
+	var product Product
+
+	c := http.Client{Timeout: time.Duration(3) * time.Second}
+
+	url := fmt.Sprintf("http://localhost:3030/product/%v", id)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Printf("error %s", err)
+		return product, err
+	}
+	req.Header.Add("Accept", `application/json`)
+	resp, err := c.Do(req)
+	if err != nil {
+		fmt.Printf("error %s", err)
+		return product, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("error %s", err)
+		return product, err
+	}
+
+	err = json.Unmarshal(body, &product)
+	if err != nil {
+		return product, err
+	}
+
+	fmt.Printf("Body : %s \n ", body)
+	fmt.Printf("Response status : %s \n", resp.Status)
+
+	return product, nil
 
 }

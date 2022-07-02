@@ -30,6 +30,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", svc.homeHandler).Methods(http.MethodGet, http.MethodHead)
+	r.HandleFunc("/product/{id}", svc.productDetailsHandler).Methods(http.MethodGet)
 
 	//fileServer := http.FileServer(http.Dir("./static"))
 	//r.Handle("/static/", http.StripPrefix("/static/", fileServer))

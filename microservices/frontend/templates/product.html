@@ -1,0 +1,36 @@
+{{ define "product" }}
+
+{{ template "header" . }}
+
+<div class="container mt-4">
+    <div class="m-4">
+        <h2>Skateboard details</h2>
+    </div>
+
+    <div class="row">
+        <!--- Image section  --->
+        <div class="col-md-6">
+            <div class="card m-4" style="width: 18rem;">
+                <img src="/static/{{ .ImageUrl }}" class="card-img-top" alt="...">
+            </div>
+        </div>
+
+        <!--- Description section  --->
+        <div class="col-md-6">
+            <div class="card m-4" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Details</h5>
+                    <p class="card-text">Skateboard {{.Name}} RON</p>
+                    <p class="card-text">Price: {{.Price}} RON</p>
+                    <p class="card-text">Description: {{.Description}}</p>
+                    <a href="#" class="btn btn-primary">Add to cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{ template "footer" . }}
+
+{{ end }}
