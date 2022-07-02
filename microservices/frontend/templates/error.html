@@ -1,0 +1,12 @@
+{{ define "error" }}
+
+{{ template "header" . }}
+
+<div class="container">
+    <h1>An error has occurred during your request</h1>
+    <h5>{{ . }}</h5>
+</div>
+
+{{ template "footer" . }}
+
+{{ end }}

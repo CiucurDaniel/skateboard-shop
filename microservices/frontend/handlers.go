@@ -42,8 +42,7 @@ func (f *frontendServer) getCartHandler(w http.ResponseWriter, r *http.Request) 
 
 	err := templates.ExecuteTemplate(w, "cart", nil)
 	if err != nil {
-		fmt.Println("Error rendering page")
-		// todo: implement a renderHttpErrorPage
+		templates.ExecuteTemplate(w, "error", err.Error())
 	}
 }
 
@@ -52,8 +51,7 @@ func (f *frontendServer) loginHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := templates.ExecuteTemplate(w, "login", nil)
 	if err != nil {
-		fmt.Println("Error rendering page")
-		// todo: implement a renderHttpErrorPage
+		templates.ExecuteTemplate(w, "error", err.Error())
 	}
 }
 
@@ -86,8 +84,7 @@ func (f frontendServer) productDetailsHandler(w http.ResponseWriter, r *http.Req
 
 	err = templates.ExecuteTemplate(w, "product", product)
 	if err != nil {
-		fmt.Println("Error rendering page")
-		// todo: implement a renderHttpErrorPage
+		templates.ExecuteTemplate(w, "error", err.Error())
 	}
 }
 
