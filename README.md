@@ -12,6 +12,6 @@ minikube start --cpus 4 --memory 6144
 * Frontend - UI component of the application
 * Catalog - contains products with stock info
 * ShoppingCart - contains items added in cart and processes payments
-* Tracking - track orders
+* Auth - Provide authentication using JWT tokens signed with a secret key
 
 ![Microservices Diagram](documentation/SkateboardShop.png)
