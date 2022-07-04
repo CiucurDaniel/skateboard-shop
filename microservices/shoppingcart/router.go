@@ -11,6 +11,20 @@ type ShoppingCartController struct {
 	Logger *applogger.MyLogger
 }
 
+// Proposed endpoints
+
+func (c ShoppingCartController) getCartItemsHandle(w http.ResponseWriter, r *http.Request) {
+	// TODO: Do it (take user id)
+}
+
+func (c ShoppingCartController) addItemToCartHandle(w http.ResponseWriter, r *http.Request) {
+	// TODO: Do it (take user id)
+}
+
+func (c ShoppingCartController) checkoutOrderForUserIdHandle(w http.ResponseWriter, r *http.Request) {
+	// TODO: Take addres, credit card info and return the address
+}
+
 // Health endpoint
 
 func (c ShoppingCartController) healthHandle(w http.ResponseWriter, _ *http.Request) {
@@ -32,5 +46,17 @@ func (c ShoppingCartController) requestLogger(router http.Handler) http.Handler 
 
 		// call logger here
 		c.Logger.LogHttpRequest(w, r, elapsedTime)
+	})
+}
+
+// Auth middleware
+
+func (c ShoppingCartController) authMiddleware(router http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		// function to check headers and verify JWT token,
+		// else return 404 unauthorized
+		router.ServeHTTP(w, r)
+
 	})
 }
