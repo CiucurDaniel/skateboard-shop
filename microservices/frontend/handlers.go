@@ -107,6 +107,31 @@ func (f frontendServer) productDetailsHandler(w http.ResponseWriter, r *http.Req
 	}
 }
 
+// Add item to cart requires us to be authorized
+func (f frontendServer) addItemToCartHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Product details handler reached")
+
+	var id = mux.Vars(r)["id"]
+	fmt.Println(fmt.Sprintf("Add to cart item with id: %v", id))
+
+	// Read cookie
+	cookieM, err := r.Cookie("skateshop_login")
+	if err != nil {
+		fmt.Println("No cookie")
+		templates.ExecuteTemplate(w, "error", "You have no cookie")
+		// TODO: Throw 404 Unauthorized
+	}
+	fmt.Println(fmt.Sprintf("Auth cookie: %v", cookieM))
+
+	// Just display the cart for now, later we do no redirect actually
+	err = templates.ExecuteTemplate(w, "cart", nil)
+	if err != nil {
+		templates.ExecuteTemplate(w, "error", err.Error())
+	}
+
+	// Bug: Both templates get executed in case there is no cookie.
+}
+
 // private helper functions used to fetch data form the other microservices
 
 func getAllProducts(endpoint string) ([]Product, error) {
