@@ -65,11 +65,25 @@ func (f *frontendServer) postLoginHandler(w http.ResponseWriter, r *http.Request
 	fmt.Println("email:", r.Form["email"])
 	fmt.Println("password:", r.Form["password"])
 
+	token, err := loginUser(r.Form["email"][0], r.Form["password"][0])
+	if err != nil {
+		templates.ExecuteTemplate(w, "login_result", "unsuccessful, please try again later.")
+	}
+
 	// redirect the user to the Home Page after he logged in
 	//http.RedirectHandler("/", 200)
 	// TODO: DOES NOW WORK, IT WILL REDIRECT HOME, BUT NO PRODUCTS WILL BE LOADED
 
-	err = templates.ExecuteTemplate(w, "login_result", "successfull")
+	// Save token in cookie
+	expiration := time.Now().Add(10 * time.Minute)
+	cookie := http.Cookie{Name: "skateshop_login", Value: token, Expires: expiration}
+	http.SetCookie(w, &cookie)
+
+	// Read cookie
+	cookieM, _ := r.Cookie("skateshop_login")
+	fmt.Println(fmt.Sprintf("I retrieved the following cookie: %v", cookieM))
+
+	err = templates.ExecuteTemplate(w, "login_result", token)
 	if err != nil {
 		templates.ExecuteTemplate(w, "error", err.Error())
 	}
@@ -164,5 +178,40 @@ func getProductById(id string) (Product, error) {
 	fmt.Printf("Response status : %s \n", resp.Status)
 
 	return product, nil
+
+}
+
+func loginUser(username string, password string) (string, error) {
+	// TODO: Replace url: with Kubernetes service name when deploying in K8s env
+	var token string
+
+	c := http.Client{Timeout: time.Duration(3) * time.Second}
+
+	url := "http://localhost:8070/login"
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Printf("error %s", err)
+		return token, err
+	}
+	req.Header.Add("Accept", `text/plain`)
+	resp, err := c.Do(req)
+	if err != nil {
+		fmt.Printf("error %s", err)
+		return token, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("error %s", err)
+		return token, err
+	}
+
+	token = string(body)
+	fmt.Printf(fmt.Sprintf("Got token: %v", token))
+
+	fmt.Printf("Body : %s \n ", body)
+	fmt.Printf("Response status : %s \n", resp.Status)
+
+	return token, nil
 
 }
