@@ -66,8 +66,13 @@ func (f *frontendServer) postLoginHandler(w http.ResponseWriter, r *http.Request
 	fmt.Println("password:", r.Form["password"])
 
 	// redirect the user to the Home Page after he logged in
-	http.RedirectHandler("/", 200)
+	//http.RedirectHandler("/", 200)
 	// TODO: DOES NOW WORK, IT WILL REDIRECT HOME, BUT NO PRODUCTS WILL BE LOADED
+
+	err = templates.ExecuteTemplate(w, "login_result", "successfull")
+	if err != nil {
+		templates.ExecuteTemplate(w, "error", err.Error())
+	}
 }
 
 func (f frontendServer) productDetailsHandler(w http.ResponseWriter, r *http.Request) {
