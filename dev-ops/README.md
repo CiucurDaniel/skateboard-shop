@@ -7,7 +7,7 @@ Here the Kubernetes manifests and any potential scripts will be present.
 Apply all objects in the folder logging
 
 ```
-kubectl apply f logging/
+kubectl apply -f logging/
 ```
 
 In order to access Kibana you need to do a port-forward:
