@@ -57,3 +57,11 @@ func (l MyLogger) LogInfo(message string) {
 			"author":       "Ciucur Daniel",
 		}).Info(message)
 }
+
+func (l MyLogger) LogFatal(message string) {
+	l.loggerInstance.WithFields(
+		logrus.Fields{
+			"microservice": "Auth",
+			"author":       "Ciucur Daniel",
+		}).Fatal(message)
+}
