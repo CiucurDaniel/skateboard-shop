@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: skateshop
+spec:
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: skateshop-auth
+          image: ciucurdaniel/skateshop-auth:latest
+          ports:
+          - containerPort: 8070
+          # readinessProbe:
+          #   initialDelaySeconds: 5
+          #   httpGet:
+          #     path: "/health"
+          #     port: 8070
+          # livenessProbe:
+          #   initialDelaySeconds: 5
+          #   httpGet:
+          #     path: "/health"
+          #     port: 8070
+          env:
+          - name: PORT
+            value: "9000"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  namespace: skateshop
+  labels:
+    app: skateshop-auth
+spec:
+  selector:
+    app: auth
+  ports:
+    - port: 8070

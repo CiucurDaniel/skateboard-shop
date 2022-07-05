@@ -31,3 +31,11 @@ Minikube makes it a bit tricky to expose your app so for now just:
 ```
 k port-forward frontend-689b64c8ff-2pz9v 9001:9000 -n skateshop
 ```
+
+## Auth
+
+Test auth deployment:
+
+```
+k port-forward auth-679fbf6d75-wbxgr 8071:8070 -n skateshop
+```
