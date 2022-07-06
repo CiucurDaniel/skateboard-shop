@@ -140,6 +140,26 @@ func (f frontendServer) addItemToCartHandler(w http.ResponseWriter, r *http.Requ
 	// Bug: Both templates get executed in case there is no cookie.
 }
 
+func (f *frontendServer) postCheckoutHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Checkout post handler reached")
+
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println("Error parsing form")
+	}
+	fmt.Println("card:", r.Form["card"])
+	fmt.Println("cvc:", r.Form["cvc"])
+	fmt.Println("address:", r.Form["address"])
+
+	// TODO: Call shopping cart with user id from cookie
+	// the shoopping cart will simply accept the payment
+	// meaning it will delete all items from the cart
+	err = checkoutForUserId("1")
+	if err != nil {
+		fmt.Println("Could not successfully checkout order")
+	}
+}
+
 // private helper functions used to fetch data form the other microservices
 
 func getAllProducts(endpoint string) ([]Product, error) {
@@ -254,4 +274,23 @@ func loginUser(username string, password string) (string, error) {
 
 	return token, nil
 
+}
+
+func checkoutForUserId(id string) error {
+	c := http.Client{Timeout: time.Duration(3) * time.Second}
+
+	url := "http://shoppingcart.skateshop.svc.cluster.local:8060/checkout"
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Printf("error %s", err)
+		return err
+	}
+	req.Header.Add("Accept", `text/plain`)
+	resp, err := c.Do(req)
+	if err != nil {
+		fmt.Printf("error %s", err)
+		return err
+	}
+	fmt.Println(fmt.Sprintf("Got response: %v", resp.Header))
+	return nil
 }
