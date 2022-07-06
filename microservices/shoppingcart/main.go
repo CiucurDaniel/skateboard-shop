@@ -21,6 +21,7 @@ func main() {
 	router := mux.NewRouter()
 	router.Use(shoppingCartController.requestLogger)
 	router.HandleFunc("/health", shoppingCartController.healthHandle)
+	router.HandleFunc("/checkout", shoppingCartController.checkoutOrderForUserIdHandle)
 
 	server := http.Server{
 		Addr:         ":8060",

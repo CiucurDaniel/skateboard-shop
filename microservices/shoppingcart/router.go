@@ -22,7 +22,11 @@ func (c ShoppingCartController) addItemToCartHandle(w http.ResponseWriter, r *ht
 }
 
 func (c ShoppingCartController) checkoutOrderForUserIdHandle(w http.ResponseWriter, r *http.Request) {
-	// TODO: Take addres, credit card info and return the address
+	// TODO: Remove items for user id 1
+	// in the future read user id from request
+	w.Header().Set("Content-Type", "text/plain")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Order completed successfully."))
 }
 
 // Health endpoint
