@@ -180,12 +180,12 @@ func getAllProducts(endpoint string) ([]Product, error) {
 }
 
 func getProductById(id string) (Product, error) {
-	// TODO: Replace url: with Kubernetes service name when deploying in K8s env
+	
 	var product Product
 
 	c := http.Client{Timeout: time.Duration(3) * time.Second}
 
-	url := fmt.Sprintf("http://localhost:3030/product/%v", id)
+	url := fmt.Sprintf("http://catalog.skateshop.svc.cluster.local:3030/product/%v", id)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Printf("error %s", err)
