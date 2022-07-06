@@ -8,3 +8,8 @@ type Product struct {
 	ImageUrl    string `json:"image_url"`
 	Description string `json:"description"`
 }
+
+type Cart struct {
+	UserID string
+	Items  []Product
+}

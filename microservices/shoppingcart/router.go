@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 	"shoppingcart/applogger"
 	"shoppingcart/data"
@@ -15,11 +16,20 @@ type ShoppingCartController struct {
 // Proposed endpoints
 
 func (c ShoppingCartController) getCartItemsHandle(w http.ResponseWriter, r *http.Request) {
-	// TODO: Do it (take user id)
+	products := data.GetItemsForUserID()
+	productsJSON, _ := json.Marshal(products)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(productsJSON)
 }
 
 func (c ShoppingCartController) addItemToCartHandle(w http.ResponseWriter, r *http.Request) {
-	// TODO: Do it (take user id)
+	data.AddItemToCart()
+
+	w.Header().Set("Content-Type", "text/plain")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Item added successfully."))
 }
 
 func (c ShoppingCartController) checkoutOrderForUserIdHandle(w http.ResponseWriter, r *http.Request) {

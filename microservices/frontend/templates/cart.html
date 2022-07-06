@@ -10,10 +10,11 @@
         <!-- Here display the list of items -->
         <div class="col-md-9 col-lg-6 col-xl-5">
             <ul>
-                <li>Skate 1</li>
-                <li>Skate 2</li>
-                <li>Skate 3</li>
-                <li>Skate 4</li>
+                {{ range . }}
+                <li>
+                    <h3>Name: {{ .Name }} Price: {{ .Price }}</h3>
+                </li>
+                {{ end }}
             </ul>
         </div>
         <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">

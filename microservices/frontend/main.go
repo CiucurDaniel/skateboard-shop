@@ -34,7 +34,7 @@ func main() {
 	r.HandleFunc("/login", svc.loginHandler).Methods(http.MethodGet)
 	r.HandleFunc("/login", svc.postLoginHandler).Methods(http.MethodPost)
 	r.HandleFunc("/cart", svc.getCartHandler).Methods(http.MethodGet)
-	r.HandleFunc("/cart/{id}", svc.addItemToCartHandler).Methods(http.MethodGet)
+	r.HandleFunc("/cart", svc.addItemToCartHandler).Methods(http.MethodPost)
 	r.HandleFunc("/checkout", svc.postCheckoutHandler).Methods(http.MethodPost)
 
 	//fileServer := http.FileServer(http.Dir("./static"))

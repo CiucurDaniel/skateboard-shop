@@ -23,7 +23,12 @@
                     <p class="card-text">Skateboard {{.Name}} RON</p>
                     <p class="card-text">Price: {{.Price}} RON</p>
                     <p class="card-text">Description: {{.Description}}</p>
-                    <a href="/cart/{{.ID}}" class="btn btn-primary">Add to cart</a>
+                    <form action="/cart" method="post">
+                        <input type="hidden" name="id" value="{{ .ID }}">
+                        <input type="hidden" name="name" value="{{ .Name }}">
+                        <input type="hidden" name="price" value="{{ .Price }}">
+                        <input class="btn btn-primary" type="submit" value="Add to cart">
+                    </form>
                 </div>
             </div>
         </div>

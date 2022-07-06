@@ -5,11 +5,10 @@ import "fmt"
 type UserCart struct {
 	UserID string
 	Items  []Product
-	Total  int
 }
 
 type Product struct {
-	ProductID string
+	ProductID string `json:"id"`
 	Name      string `json:"name"`
 	Price     int    `json:"price"`
 }
@@ -24,7 +23,6 @@ var CartInMemoryDB = []UserCart{
 				Price:     140,
 			},
 		},
-		Total: 140,
 	},
 	{
 		UserID: "1",
@@ -35,12 +33,19 @@ var CartInMemoryDB = []UserCart{
 				Price:     140,
 			},
 		},
-		Total: 140,
 	},
 }
 
-func CalculateTotalForUserID() {
-	// TODO: Implement in a next version of the application
+func GetItemsForUserID() []Product {
+	for i := 0; i < len(CartInMemoryDB); i++ {
+		if CartInMemoryDB[i].UserID == "1" {
+			fmt.Println("Found items for user ID")
+			return CartInMemoryDB[i].Items
+		}
+	}
+
+	fmt.Printf("No items found for user ID")
+	return []Product{}
 }
 
 func CheckoutOrder(UserID string) {
@@ -59,4 +64,8 @@ func CheckoutOrder(UserID string) {
 	if ok == true {
 		CartInMemoryDB = append(CartInMemoryDB[:pos], CartInMemoryDB[pos+1:]...)
 	}
+}
+
+func AddItemToCart() {
+	fmt.Println("Item added to cart")
 }

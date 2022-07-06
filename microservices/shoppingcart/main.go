@@ -20,8 +20,10 @@ func main() {
 
 	router := mux.NewRouter()
 	router.Use(shoppingCartController.requestLogger)
-	router.HandleFunc("/health", shoppingCartController.healthHandle)
-	router.HandleFunc("/checkout", shoppingCartController.checkoutOrderForUserIdHandle)
+	router.HandleFunc("/health", shoppingCartController.healthHandle).Methods(http.MethodGet)
+	router.HandleFunc("/checkout", shoppingCartController.checkoutOrderForUserIdHandle).Methods(http.MethodGet)
+	router.HandleFunc("/additem", shoppingCartController.addItemToCartHandle).Methods(http.MethodPost)
+	router.HandleFunc("/cart", shoppingCartController.getCartItemsHandle).Methods(http.MethodGet)
 
 	server := http.Server{
 		Addr:         ":8060",

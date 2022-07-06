@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"text/template"
 	"time"
 )
@@ -21,10 +23,7 @@ func (f *frontendServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		// todo: assign empty array of skateboard and sed it to frontend
 	}
-	fmt.Println("I AM BACK ON HOME HANDLER")
-	fmt.Println("CALLING PRODUCT 1")
 	//fmt.Println(products[1]) Error was here
-	fmt.Println("AND HERE IS THE ERROR. TOLD YOU")
 
 	err = templates.ExecuteTemplate(w, "home", products)
 	if err != nil {
@@ -36,14 +35,9 @@ func (f *frontendServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 func (f *frontendServer) getCartHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Cart handler reached")
 
-	// TODO: IMPLEMENT this which will fetch items from shopping cart for given user
-	/*cartProducts, err := getCartProductsForUser("user id")
-	if err != nil {
-		fmt.Println(err)
-		// todo: display proper page
-	}*/
+	products := getCartItems("1")
 
-	err := templates.ExecuteTemplate(w, "cart", nil)
+	err := templates.ExecuteTemplate(w, "cart", products)
 	if err != nil {
 		templates.ExecuteTemplate(w, "error", err.Error())
 	}
@@ -116,8 +110,13 @@ func (f frontendServer) addItemToCartHandler(w http.ResponseWriter, r *http.Requ
 
 	didRenderOneTemplate := false
 
-	var id = mux.Vars(r)["id"]
-	fmt.Println(fmt.Sprintf("Add to cart item with id: %v", id))
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println("Error parsing form")
+	}
+	fmt.Println("id:", r.Form["id"])
+	fmt.Println("name:", r.Form["name"])
+	fmt.Println("price:", r.Form["price"])
 
 	// Read cookie
 	cookieM, err := r.Cookie("skateshop_login")
@@ -129,13 +128,15 @@ func (f frontendServer) addItemToCartHandler(w http.ResponseWriter, r *http.Requ
 	}
 	fmt.Println(fmt.Sprintf("Auth cookie: %v", cookieM))
 
-	// TODO: Call cart microservice twice
-	// addProduct(user id, name, price)
-	// getCartItems(user id)
+	priceint, _ := strconv.Atoi(r.Form["price"][0])
+
+	// Here make 2 requests to cart microservice
+	addProductToCart(r.Form["name"][0], priceint)
+	products := getCartItems("1")
 
 	if didRenderOneTemplate == false {
 		// Just display the cart for now, later we do no redirect actually
-		err = templates.ExecuteTemplate(w, "cart", nil)
+		err = templates.ExecuteTemplate(w, "cart", products)
 		if err != nil {
 			templates.ExecuteTemplate(w, "error", err.Error())
 		}
@@ -155,9 +156,7 @@ func (f *frontendServer) postCheckoutHandler(w http.ResponseWriter, r *http.Requ
 	fmt.Println("cvc:", r.Form["cvc"])
 	fmt.Println("address:", r.Form["address"])
 
-	// TODO: Call shopping cart with user id from cookie
-	// the shopping cart will simply accept the payment
-	// meaning it will delete all items from the cart
+	// TODO: Call shopping cart with user id from cookie the shopping cart will simply accept the payment meaning it will delete all items from the cart
 	err = checkoutForUserId("1")
 	if err != nil {
 		fmt.Println("Could not successfully checkout order")
@@ -304,4 +303,67 @@ func checkoutForUserId(id string) error {
 
 	fmt.Println(fmt.Sprintf("Got response: %v", resp.Status))
 	return nil
+}
+
+func addProductToCart(name string, price int) {
+	c := http.Client{Timeout: time.Duration(3) * time.Second}
+
+	// assume user id = 1 added the item
+
+	p := Product{
+		Name:  name,
+		Price: price,
+	}
+
+	pjson, err := json.Marshal(p)
+	if err != nil {
+		fmt.Printf("Could not conv to json your cart item")
+	}
+
+	url := "http://shoppingcart.skateshop.svc.cluster.local:8060/additem"
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(pjson))
+	if err != nil {
+		fmt.Printf("error %s", err)
+	}
+	req.Header.Add("Accept", `application/json`)
+	resp, err := c.Do(req)
+	if err != nil {
+		fmt.Printf("error %s", err)
+	}
+
+	fmt.Println(fmt.Sprintf("Got response: %v", resp.Status))
+}
+
+func getCartItems(userid string) []Product {
+	fmt.Println("HERE TAKE YOUR ITEMS")
+
+	var products []Product
+
+	c := http.Client{Timeout: time.Duration(3) * time.Second}
+
+	// assume user id = 1 added the item
+
+	url := "http://shoppingcart.skateshop.svc.cluster.local:8060/cart"
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Printf("error %s", err)
+	}
+	req.Header.Add("Accept", `application/json`)
+	resp, err := c.Do(req)
+	if err != nil {
+		fmt.Printf("error %s", err)
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("error %s", err)
+	}
+
+	err = json.Unmarshal(body, &products)
+	if err != nil {
+		fmt.Printf("Error converting body response to json")
+	}
+
+	return products
 }
