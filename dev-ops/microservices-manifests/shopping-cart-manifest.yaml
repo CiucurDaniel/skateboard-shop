@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shoppingcart
+  namespace: skateshop
+spec:
+  selector:
+    matchLabels:
+      app: shoppingcart
+  template:
+    metadata:
+      labels:
+        app: shoppingcart
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: skateshop-shoppingcart
+          image: ciucurdaniel/skateshop-shoppingcart:latest
+          ports:
+          - containerPort: 8060
+          # readinessProbe:
+          #   initialDelaySeconds: 5
+          #   httpGet:
+          #     path: "/health"
+          #     port: 8070
+          # livenessProbe:
+          #   initialDelaySeconds: 5
+          #   httpGet:
+          #     path: "/health"
+          #     port: 8070
+          env:
+          - name: PORT
+            value: "9000"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shoppingcart
+  namespace: skateshop
+  labels:
+    app: skateshop-shoppingcart
+spec:
+  selector:
+    app: shoppingcart
+  ports:
+    - port: 8060
