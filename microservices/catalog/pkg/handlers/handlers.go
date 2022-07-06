@@ -70,3 +70,10 @@ func (c CatalogController) healthHandle(w http.ResponseWriter, _ *http.Request) 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Service is healthy."))
 }
+
+// TODO: DELETE LATER
+func (c CatalogController) SeedSelf(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	c.Db.Create(&data.DemoProducts)
+	w.Write([]byte("Inserted data please check"))
+}

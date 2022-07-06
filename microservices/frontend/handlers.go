@@ -21,7 +21,10 @@ func (f *frontendServer) homeHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		// todo: assign empty array of skateboard and sed it to frontend
 	}
-	fmt.Println(products[1])
+	fmt.Println("I AM BACK ON HOME HANDLER")
+	fmt.Println("CALLING PRODUCT 1")
+	//fmt.Println(products[1]) Error was here
+	fmt.Println("AND HERE IS THE ERROR. TOLD YOU")
 
 	err = templates.ExecuteTemplate(w, "home", products)
 	if err != nil {
@@ -138,14 +141,20 @@ func getAllProducts(endpoint string) ([]Product, error) {
 	// TODO: Replace url: with Kubernetes service name when deploying in K8s env
 	var products []Product
 
-	c := http.Client{Timeout: time.Duration(3) * time.Second}
+	fmt.Printf("getAllProducts reached fine")
+
+	c := http.Client{Timeout: time.Duration(3) * time.Second}// catalog.skateshop.svc.cluster.local
 	req, err := http.NewRequest("GET", "http://localhost:3030/product", nil)
 	if err != nil {
+		fmt.Println("I GET ERROR WHILE CALLING K8S SERVICE")
 		fmt.Printf("error %s", err)
 		return products, err
 	}
 	req.Header.Add("Accept", `application/json`)
 	resp, err := c.Do(req)
+
+	fmt.Printf("I DID THE REQUEST I AM WAITING FOR ERRORS")
+
 	if err != nil {
 		fmt.Printf("error %s", err)
 		return products, err
@@ -165,6 +174,7 @@ func getAllProducts(endpoint string) ([]Product, error) {
 	fmt.Printf("Body : %s \n ", body)
 	fmt.Printf("Response status : %s \n", resp.Status)
 
+	fmt.Printf("NO ERROR???")
 	return products, nil
 
 }

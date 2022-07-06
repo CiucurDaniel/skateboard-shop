@@ -36,6 +36,8 @@ func main() {
 	router.HandleFunc("/product", controller.AddProduct).Methods(http.MethodPost)
 	router.HandleFunc("/product/{id}", controller.GetProductsById).Methods(http.MethodGet)
 
+	router.HandleFunc("/seed", controller.SeedSelf).Methods(http.MethodGet)
+
 	servAddr := fmt.Sprintf(":%v", appConfig.ServerPort)
 	server := http.Server{
 		Addr:         servAddr,
