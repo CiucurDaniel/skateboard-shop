@@ -180,7 +180,7 @@ func getAllProducts(endpoint string) ([]Product, error) {
 }
 
 func getProductById(id string) (Product, error) {
-	
+
 	var product Product
 
 	c := http.Client{Timeout: time.Duration(3) * time.Second}
@@ -222,7 +222,7 @@ func loginUser(username string, password string) (string, error) {
 
 	c := http.Client{Timeout: time.Duration(3) * time.Second}
 
-	url := "http://localhost:8070/login"
+	url := "http://auth.skateshop.svc.cluster.local:8070/login"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Printf("error %s", err)
