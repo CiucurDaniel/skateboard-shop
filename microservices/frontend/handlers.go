@@ -129,6 +129,10 @@ func (f frontendServer) addItemToCartHandler(w http.ResponseWriter, r *http.Requ
 	}
 	fmt.Println(fmt.Sprintf("Auth cookie: %v", cookieM))
 
+	// TODO: Call cart microservice twice
+	// addProduct(user id, name, price)
+	// getCartItems(user id)
+
 	if didRenderOneTemplate == false {
 		// Just display the cart for now, later we do no redirect actually
 		err = templates.ExecuteTemplate(w, "cart", nil)
@@ -152,11 +156,17 @@ func (f *frontendServer) postCheckoutHandler(w http.ResponseWriter, r *http.Requ
 	fmt.Println("address:", r.Form["address"])
 
 	// TODO: Call shopping cart with user id from cookie
-	// the shoopping cart will simply accept the payment
+	// the shopping cart will simply accept the payment
 	// meaning it will delete all items from the cart
 	err = checkoutForUserId("1")
 	if err != nil {
 		fmt.Println("Could not successfully checkout order")
+		templates.ExecuteTemplate(w, "checkout_result", "NOT successful")
+	}
+
+	err = templates.ExecuteTemplate(w, "checkout_result", "SUCCESSFUL")
+	if err != nil {
+		templates.ExecuteTemplate(w, "error", err.Error())
 	}
 }
 
@@ -291,6 +301,7 @@ func checkoutForUserId(id string) error {
 		fmt.Printf("error %s", err)
 		return err
 	}
-	fmt.Println(fmt.Sprintf("Got response: %v", resp.Header))
+
+	fmt.Println(fmt.Sprintf("Got response: %v", resp.Status))
 	return nil
 }
