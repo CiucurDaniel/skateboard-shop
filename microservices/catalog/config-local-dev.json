@@ -1,0 +1,5 @@
+{
+  "connection_string": "root:my-password@tcp(catalog-mysql.skateshop.svc.cluster.local:3306)/catalogdb?parseTime=true",
+  "port": 3030
+}
+
