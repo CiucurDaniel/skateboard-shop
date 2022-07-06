@@ -143,8 +143,8 @@ func getAllProducts(endpoint string) ([]Product, error) {
 
 	fmt.Printf("getAllProducts reached fine")
 
-	c := http.Client{Timeout: time.Duration(3) * time.Second}// catalog.skateshop.svc.cluster.local
-	req, err := http.NewRequest("GET", "http://localhost:3030/product", nil)
+	c := http.Client{Timeout: time.Duration(3) * time.Second}
+	req, err := http.NewRequest("GET", "http://catalog.skateshop.svc.cluster.local:3030/product", nil)
 	if err != nil {
 		fmt.Println("I GET ERROR WHILE CALLING K8S SERVICE")
 		fmt.Printf("error %s", err)
