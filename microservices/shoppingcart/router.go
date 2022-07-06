@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"shoppingcart/applogger"
+	"shoppingcart/data"
 	"time"
 )
 
@@ -22,8 +23,9 @@ func (c ShoppingCartController) addItemToCartHandle(w http.ResponseWriter, r *ht
 }
 
 func (c ShoppingCartController) checkoutOrderForUserIdHandle(w http.ResponseWriter, r *http.Request) {
-	// TODO: Remove items for user id 1
-	// in the future read user id from request
+
+	data.CheckoutOrder("1") // TODO: In future read user id from request
+
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Order completed successfully."))

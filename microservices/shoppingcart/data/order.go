@@ -1,4 +1,4 @@
-package main
+package data
 
 import "fmt"
 
@@ -59,15 +59,4 @@ func CheckoutOrder(UserID string) {
 	if ok == true {
 		CartInMemoryDB = append(CartInMemoryDB[:pos], CartInMemoryDB[pos+1:]...)
 	}
-}
-
-func main() {
-	fmt.Println("Before removing")
-
-	fmt.Println(fmt.Sprintf("%+v", CartInMemoryDB))
-
-	CheckoutOrder("1")
-	fmt.Println("After removing")
-
-	fmt.Println(fmt.Sprintf("%+v", CartInMemoryDB))
 }
