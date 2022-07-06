@@ -1,6 +1,8 @@
-package data
+package main
 
-type ShoppingCart struct {
+import "fmt"
+
+type UserCart struct {
 	UserID string
 	Items  []Product
 	Total  int
@@ -12,7 +14,18 @@ type Product struct {
 	Price     int    `json:"price"`
 }
 
-var CartInMemoryDB = []ShoppingCart{
+var CartInMemoryDB = []UserCart{
+	{
+		UserID: "34",
+		Items: []Product{
+			{
+				ProductID: "1",
+				Name:      "Skate Cliche",
+				Price:     140,
+			},
+		},
+		Total: 140,
+	},
 	{
 		UserID: "1",
 		Items: []Product{
@@ -26,11 +39,35 @@ var CartInMemoryDB = []ShoppingCart{
 	},
 }
 
-func (c ShoppingCart) CalculateTotalForUserID() {
-	// TODO: Implement
+func CalculateTotalForUserID() {
+	// TODO: Implement in a next version of the application
 }
 
-func (c ShoppingCart) PlaceOrder() {
-	// TODO: Implement
-	// Info: This will just delete the items for the user for now
+func CheckoutOrder(UserID string) {
+
+	ok := false
+	pos := 0
+
+	for i := 0; i < len(CartInMemoryDB); i++ {
+		if CartInMemoryDB[i].UserID == UserID {
+			fmt.Println(fmt.Sprintf("Found my user at index %v", i))
+			ok = true
+			pos = i
+		}
+	}
+
+	if ok == true {
+		CartInMemoryDB = append(CartInMemoryDB[:pos], CartInMemoryDB[pos+1:]...)
+	}
+}
+
+func main() {
+	fmt.Println("Before removing")
+
+	fmt.Println(fmt.Sprintf("%+v", CartInMemoryDB))
+
+	CheckoutOrder("1")
+	fmt.Println("After removing")
+
+	fmt.Println(fmt.Sprintf("%+v", CartInMemoryDB))
 }
