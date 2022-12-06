@@ -2,7 +2,7 @@
 
 Here the Kubernetes manifests and any potential scripts will be present.
 
-# Logging
+## Logging
 
 Apply all objects in the folder logging
 
